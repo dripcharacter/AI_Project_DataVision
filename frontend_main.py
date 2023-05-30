@@ -6,9 +6,9 @@ URL = "http://localhost:8000/visualize"
 st.sidebar.title("Input space")
 
 st.title("Output space")
-input = st.sidebar.text_input("please input your json here")
+input = st.sidebar.text_area("please input your json here")
 try:
-    st.sidebar.json(json.loads(input))
+    st.sidebar.json(json.loads(input), expanded=False)
 except:
     st.sidebar.text("json form will appear here")
 try:

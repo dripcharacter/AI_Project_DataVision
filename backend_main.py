@@ -27,3 +27,7 @@ async def create_image(result: ModelResult):
         os.remove(file_path)
 
     return FileResponse(file_path, background=BackgroundTask(cleanup))
+
+@app.get("/test/")
+async def test_func():
+    return {"test": 765}
