@@ -2,7 +2,7 @@ import streamlit as st
 import json
 import requests
 
-URL = "http://localhost:8000/visualize"
+URL = "http://3.36.142.235:8000/visualize"
 st.sidebar.title("Input space")
 
 st.title("Output space")
