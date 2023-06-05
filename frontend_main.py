@@ -1,25 +1,53 @@
 import streamlit as st
 import json
 import requests
+import pandas as pd
+from io import BytesIO
+import zipfile
 
+# for service environment
 URL = "http://3.36.142.235:8000/visualize"
+# for dev environment
+# URL = "http://localhost:8000/visualize"
+
 st.sidebar.title("Input space")
 
 st.title("Output space")
-input = st.sidebar.text_area("please input your json here")
-try:
-    st.sidebar.json(json.loads(input), expanded=False)
-except:
-    st.sidebar.text("json form will appear here")
-try:
-    response = requests.post(URL, headers={'Cache-Control': 'no-cache'}, json=json.loads(input))
 
-    st.image(response.content, caption="This image is a visualization of input json")
+uploaded_file = st.sidebar.file_uploader("choose a excel file")
+response = None
+if uploaded_file is not None:
+    # Can be used wherever a "file-like" object is accepted:
+    dataframe = pd.read_excel(uploaded_file)
+    st.sidebar.write(dataframe)
+
+    response = requests.post(URL, headers={'Cache-Control': 'no-cache'}, json=json.loads(dataframe.to_json()))
+
+if response is not None:
+    zip_data = response.content
+    zip_file = zipfile.ZipFile(BytesIO(zip_data), "r")
+    png_file = zip_file.read("result.png")
+    xlsx_file = zip_file.read("result.xlsx")
+
+try:
+    st.image(png_file, caption="This image is a visualization of input json")
     btn = st.download_button(
         label="Download visualization result",
-        data=response.content,
+        data=png_file,
         file_name="visualization_result.png",
         mime="image/png"
     )
 except:
     st.text("image will appear hear")
+
+try:
+    result_df = pd.read_excel(xlsx_file)
+    st.write(result_df)
+    btn = st.download_button(
+        label="Download result xlsx",
+        data=xlsx_file,
+        file_name="result_file.xlsx",
+        mime="xlsx"
+    )
+except:
+    st.text("result xlsx will appear hear")

@@ -52,10 +52,10 @@ def colormap_generate(min_color, max_color, target_list):
 
 
 def object_visualize(json_object, file_path):
-    key_list = list(json_object['evaluation'].keys())
+    key_list = list(json_object['Time'])
 
-    value_list = list(json_object['evaluation'].values())
-    mean_list = list(json_object['evaluation'].values())
+    value_list = list(json_object['label'])
+    mean_list = list(json_object['label'])
     for key_idx, key_entry in enumerate(key_list):
         tmp = key_entry.split(':')
         if len(tmp) == 1:
@@ -73,7 +73,7 @@ def object_visualize(json_object, file_path):
 
     colors = colormap_generate((1.0, 0, 0), (0, 0, 1.0), value_list)
 
-    plt.bar(key_list, value_list, label='individual_val', width=20.0, color=colors, edgecolor='black')
+    plt.bar(key_list, value_list, label='individual_val', width=10.0, color=colors, edgecolor='black')
     plt.xlabel('time')
     plt.ylabel('result_label')
     plt.xlim([key_list[0] - 60, key_list[-1] + 60])

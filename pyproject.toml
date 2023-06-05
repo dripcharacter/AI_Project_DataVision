@@ -16,6 +16,8 @@ uvicorn = "^0.22.0"
 python-multipart = "^0.0.6"
 streamlit = "^1.22.0"
 requests = "^2.31.0"
+torch = "^2.0.1"
+transformers = "^4.29.2"
 
 
 [build-system]

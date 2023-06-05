@@ -1,32 +1,37 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
 from visualize import object_visualize
 from starlette.background import BackgroundTask
 import os
-
-
-class ModelResult(BaseModel):
-    series_name: str
-    episode_num: int
-    current_classify: str
-    evaluation: dict
+from modeltest import test
+import pandas as pd
+import zipfile
 
 
 app = FastAPI()
 
 
 @app.post("/visualize/")
-async def create_image(result: ModelResult):
-    result_dict = result.dict()
-    file_path = str(result_dict['series_name']) + '_' + str(result_dict['episode_num']) + '.png'
-    object_visualize(result_dict, file_path)
+async def create_image(request: Request):
+    json_val = await request.json()
+    dataframe = pd.DataFrame(json_val)
+    test_result = test(dataframe)
+    test_result = test_result.drop(['Subtitle'], axis=1)
+    object_visualize(test_result, "result.png")
+
+    file_ls = ['result.png', 'result.xlsx']
+    with zipfile.ZipFile("result_zip.zip", 'w') as result_zip:
+        for entry in file_ls:
+            result_zip.write(entry)
+        result_zip.close()
 
     def cleanup():
-        os.remove(file_path)
+        for entry in file_ls:
+            os.remove(entry)
+        os.remove("result_zip.zip")
 
-    return FileResponse(file_path, background=BackgroundTask(cleanup))
+    return FileResponse("result_zip.zip", background=BackgroundTask(cleanup))
 
 @app.get("/test/")
 async def test_func():
