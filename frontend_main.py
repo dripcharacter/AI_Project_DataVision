@@ -7,9 +7,9 @@ import zipfile
 from modeltest import evaluate
 
 # for service environment
-# URL = "http://3.36.142.235:8000/visualize"
+URL = "http://3.36.142.235:8000/visualize"
 # for dev environment
-URL = "http://localhost:8000/visualize"
+# URL = "http://localhost:8000/visualize"
 
 st.sidebar.title("Input space")
 
