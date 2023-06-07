@@ -46,6 +46,40 @@ def test(test_sample):
     return test_sample
 
 
+def evaluate(test_samples):
+    result = []
+    result_y = []
+    real_result = []
+    for i in range(len(test_samples['label'].values) - 3):
+        # print(test_sample['label'].values[i])
+        sum_R = 0
+        for j in range(3):
+            sum_R = sum_R + test_samples['label'].values[i + j]
+
+        if sum_R / 3 > 0.3:  # 기준 값
+            result.append(test_samples['Time'].values[i])
+            result_y.append(sum_R / 3)
+
+    aggressive_count = len(result)
+    total_count = len(test_samples['label'].values)
+    aggressive_percent = 100 * aggressive_count / total_count
+
+    real_result.append("Aggressive per 3 sentence over is {:.2f}%".format(aggressive_percent))
+
+    # 연령 분류
+    age_category = ''
+    if aggressive_percent >= 9:
+        age_category = '19 years old'
+    elif aggressive_percent >= 3.5:
+        age_category = '15 years old'
+    else:
+        age_category = 'All'
+
+    real_result.append("Age category: {}".format(age_category))
+    return real_result
+
+
+
 if __name__ == "__main__":
     TEST_NAME = "마이네임_1화.xlsx"
     test_sample = test(TEST_NAME)

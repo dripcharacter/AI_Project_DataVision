@@ -4,11 +4,12 @@ import requests
 import pandas as pd
 from io import BytesIO
 import zipfile
+from modeltest import evaluate
 
 # for service environment
-URL = "http://3.36.142.235:8000/visualize"
+# URL = "http://3.36.142.235:8000/visualize"
 # for dev environment
-# URL = "http://localhost:8000/visualize"
+URL = "http://localhost:8000/visualize"
 
 st.sidebar.title("Input space")
 
@@ -28,6 +29,14 @@ if response is not None:
     zip_file = zipfile.ZipFile(BytesIO(zip_data), "r")
     png_file = zip_file.read("result.png")
     xlsx_file = zip_file.read("result.xlsx")
+
+try:
+    resultdf = pd.read_excel(xlsx_file)
+    evaluation_result=evaluate(resultdf)
+    st.text(evaluation_result[0])
+    st.text(evaluation_result[1])
+except:
+    st.text("evaluate result will appear hear")
 
 try:
     st.image(png_file, caption="This image is a visualization of input json")

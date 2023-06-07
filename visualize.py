@@ -73,7 +73,8 @@ def object_visualize(json_object, file_path):
 
     colors = colormap_generate((1.0, 0, 0), (0, 0, 1.0), value_list)
 
-    plt.bar(key_list, value_list, label='individual_val', width=10.0, color=colors, edgecolor='black')
+    plt.figure(figsize=(20, 4))
+    plt.bar(key_list, value_list, label='individual_val', width=5.0, color=colors, edgecolor='black')
     plt.xlabel('time')
     plt.ylabel('result_label')
     plt.xlim([key_list[0] - 60, key_list[-1] + 60])
