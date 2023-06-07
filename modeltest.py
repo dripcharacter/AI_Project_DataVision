@@ -6,12 +6,11 @@ from transformers import AutoTokenizer
 MODEL_PATH = "./model.pt"
 MODEL_NAME = "beomi/KcELECTRA-base"
 
-model = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-device = torch.device('cpu')
-
-
 def test(test_sample):
+    model = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    device = torch.device('cpu')
+
     test_sample = test_sample.drop(['Transliteration'], axis=1)
     test_sample['label'] = np.nan
 
